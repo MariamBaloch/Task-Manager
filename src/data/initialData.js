@@ -11,14 +11,14 @@ const tasks = [
     'Design Database Schema',
     'Design the initial database schema',
     1,
-    new Date(2024, 7, 15)
+    new Date(2024, 6, 15)
   ),
   new Task(
     2,
     'Set up Backend',
     'Set up the backend with Node.js and Express',
     2,
-    new Date(2024, 7, 16)
+    new Date(2024, 7, 15)
   ),
   new Task(
     3,
@@ -39,35 +39,35 @@ const tasks = [
     'Build Frontend Layout',
     'Design the layout using React and PrimeReact',
     2,
-    new Date(2024, 7, 19)
+    new Date(2024, 7, 18)
   ),
   new Task(
     6,
     'Integrate Frontend with Backend',
     'Connect the frontend with backend API',
     1,
-    new Date(2024, 7, 20)
+    new Date(2024, 8, 5)
   ),
   new Task(
     7,
     'Write Unit Tests',
     'Write unit tests for the backend services',
     3,
-    new Date(2024, 7, 21)
+    new Date(2024, 8, 5)
   ),
   new Task(
     8,
     'Optimize Performance',
     'Optimize the application for better performance',
     2,
-    new Date(2024, 7, 22)
+    new Date(2024, 8, 10)
   ),
   new Task(
     9,
     'Prepare Documentation',
     'Prepare documentation for the project',
     3,
-    new Date(2024, 7, 23)
+    new Date(2024, 8, 10)
   ),
   new Task(
     10,
@@ -110,6 +110,21 @@ const tasks = [
     'Launch the product to the market',
     1,
     new Date(2024, 7, 29)
+  ),
+
+  new Task(
+    16,
+    'Fix Critical Bugs',
+    'Fix critical bugs identified in production',
+    1,
+    new Date(2024, 7, 1)
+  ),
+  new Task(
+    17,
+    'Update Dependencies',
+    'Update project dependencies to the latest versions',
+    2,
+    new Date(2024, 7, 5)
   )
 ]
 
@@ -118,18 +133,17 @@ tasks.forEach((task) => {
   priorityQueue.enqueue(task)
 })
 
-
-taskManager.addDependency(3, 1) 
-taskManager.addDependency(4, 2) 
-taskManager.addDependency(6, 5) 
-taskManager.addDependency(10, 7) 
-taskManager.addDependency(10, 8) 
-taskManager.addDependency(15, 13) 
-taskManager.addDependency(15, 14) 
-
+taskManager.addDependency(3, 1)
+taskManager.addDependency(4, 2)
+taskManager.addDependency(6, 5)
+taskManager.addDependency(10, 7)
+taskManager.addDependency(10, 8)
+taskManager.addDependency(15, 13)
+taskManager.addDependency(15, 14)
 
 taskManager.markTaskComplete(1)
 taskManager.markTaskComplete(2)
 taskManager.markTaskComplete(5)
+taskManager.markTaskComplete(7)
 
 export { taskManager, priorityQueue }

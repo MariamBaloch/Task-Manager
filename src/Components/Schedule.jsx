@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Calendar } from 'primereact/calendar'
-
+import { taskManager } from '../data'
 function Schedule() {
   const [date, setDate] = useState(new Date())
+  const [tasksForSelectedDate, setTasksForSelectedDate] = useState([])
 
-  const tasks = [
-    { id: 1, title: 'Task 1', date: new Date(2024, 7, 15) },
-    { id: 2, title: 'Task 2', date: new Date(2024, 7, 15) },
-    { id: 3, title: 'Task 3', date: new Date(2024, 7, 18) }
-  ]
-
-  const markedDates = [
-    new Date(2024, 7, 15),
-    new Date(2024, 7, 18),
-    new Date(2024, 7, 22)
-  ]
+  const markedDates = Object.values(taskManager.tasks).map(
+    (task) => task.deadline
+  )
 
   const dateTemplate = (date) => {
     const isMarked = markedDates.some(
@@ -33,7 +26,7 @@ function Schedule() {
               position: 'absolute',
               width: '4px',
               height: '4px',
-              backgroundColor: 'blue',
+              backgroundColor: '#2563eb',
               borderRadius: '50%',
               bottom: '-5px',
               left: '50%',
@@ -45,12 +38,15 @@ function Schedule() {
     )
   }
 
-  const tasksForSelectedDate = tasks.filter(
-    (task) => task.date.toDateString() === date.toDateString()
-  )
+  useEffect(() => {
+    const tasksForDate = Object.values(taskManager.tasks).filter(
+      (task) => task.deadline.toDateString() === date.toDateString()
+    )
+    setTasksForSelectedDate(tasksForDate)
+  }, [date])
 
   return (
-    <div style={{ display: 'flex', gap: '20px' }}>
+    <div style={{ display: 'flex', gap: '20px', overflow: 'hidden' }}>
       <div>
         <Calendar
           value={date}
@@ -61,10 +57,10 @@ function Schedule() {
       </div>
       <div style={{ flex: 1 }}>
         <h3>
-          Tasks for{' '}
+          Tasks on{' '}
           {date.toDateString() === new Date().toDateString()
-            ? 'today'
-            : date.toLocaleDateString()}
+            ? 'Today'
+            : date.toDateString()}
         </h3>
         <ul>
           {tasksForSelectedDate.length > 0 ? (

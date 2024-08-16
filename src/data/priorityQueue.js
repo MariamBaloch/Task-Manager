@@ -1,6 +1,4 @@
-import { Task } from './Task.js'
-
-class PriorityQueue {
+export class PriorityQueue {
   constructor() {
     this.tasks = []
     this.positions = {}
@@ -107,14 +105,3 @@ class PriorityQueue {
     return this.tasks.length
   }
 }
-
-let t1 = new Task(1, 'potato', 'ayaya', 1, new Date(), [], true)
-let t2 = new Task(2, 'potato', 'ayaya', 1, new Date(), [], true)
-
-let q = new PriorityQueue()
-q.enqueue(t2)
-q.enqueue(t1)
-q.dequeue(2)
-q.dequeue(1)
-
-console.log(q)

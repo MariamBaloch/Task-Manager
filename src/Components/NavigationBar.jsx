@@ -56,7 +56,7 @@ function NavigationBar({ title }) {
                         width="35"
                         height="35"
                         viewBox="0 0 1024 1024"
-                        fill="#6370f4"
+                        fill="#2563eb"
                         className="icon"
                         version="1.1"
                         xmlns="http://www.w3.org/2000/svg"
