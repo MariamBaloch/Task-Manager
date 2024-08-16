@@ -1,7 +1,7 @@
 export class TaskManager {
   constructor() {
-    this.tasks = {} // Store tasks by their ID
-    this.dependencies = {} // Store dependencies by task ID
+    this.tasks = {}
+    this.dependencies = {}
   }
 
   addTask(task) {
@@ -33,9 +33,11 @@ export class TaskManager {
       delete this.tasks[taskId]
       delete this.dependencies[taskId]
     }
-    // Remove this task as a dependency from other tasks
     Object.keys(this.dependencies).forEach((tid) => {
       this.removeDependency(tid, taskId)
+      if (this.dependencies[tid].length === 0) {
+        this.removeTask(tid)
+      }
     })
   }
 
@@ -52,5 +54,34 @@ export class TaskManager {
     } else {
       return `Task ${taskId} cannot be completed because its dependencies are not completed.`
     }
+  }
+  updateTask(updatedTask) {
+    if (this.tasks[updatedTask.id]) {
+      this.tasks[updatedTask.id] = updatedTask
+    }
+  }
+  getTasksByDeadline() {
+    return Object.values(this.tasks).sort(
+      (a, b) => new Date(a.deadline) - new Date(b.deadline)
+    )
+  }
+  getOverdueTasks() {
+    const now = new Date()
+    return Object.values(this.tasks).filter(
+      (task) => new Date(task.deadline) < now && !task.completed
+    )
+  }
+
+  getTaskSummary() {
+    let completed = 0
+    let incomplete = 0
+    Object.values(this.tasks).forEach((task) => {
+      if (task.completed) {
+        completed++
+      } else {
+        incomplete++
+      }
+    })
+    return { completed, incomplete }
   }
 }
