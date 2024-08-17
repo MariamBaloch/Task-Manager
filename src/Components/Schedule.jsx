@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Calendar } from 'primereact/calendar'
 import { taskManager } from '../data'
+
 function Schedule() {
   const [date, setDate] = useState(new Date())
   const [tasksForSelectedDate, setTasksForSelectedDate] = useState([])
@@ -57,10 +58,14 @@ function Schedule() {
       </div>
       <div style={{ flex: 1 }}>
         <h3>
-          Tasks on{' '}
-          {date.toDateString() === new Date().toDateString()
-            ? 'Today'
-            : date.toDateString()}
+          Tasks due{' '}
+          {date.toDateString() === new Date().toDateString() ? (
+            <span style={{ color: 'rgb(6, 214, 160)' }}>today</span>
+          ) : (
+            <span style={{ color: 'rgb(6, 214, 160)' }}>
+              {date.toDateString()}
+            </span>
+          )}
         </h3>
         <ul>
           {tasksForSelectedDate.length > 0 ? (
