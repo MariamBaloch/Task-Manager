@@ -55,20 +55,33 @@ export class TaskManager {
       return `Task ${taskId} cannot be completed because its dependencies are not completed.`
     }
   }
+
   updateTask(updatedTask) {
     if (this.tasks[updatedTask.id]) {
       this.tasks[updatedTask.id] = updatedTask
     }
   }
+
   getTasksByDeadline() {
     return Object.values(this.tasks).sort(
       (a, b) => new Date(a.deadline) - new Date(b.deadline)
     )
   }
+
   getOverdueTasks() {
     const now = new Date()
     return Object.values(this.tasks).filter(
       (task) => new Date(task.deadline) < now && !task.completed
+    )
+  }
+  getDueSoonTasks() {
+    const today = new Date()
+    const nextWeek = new Date()
+    nextWeek.setDate(today.getDate() + 7)
+
+    return Object.values(this.tasks).filter(
+      (task) =>
+        !task.completed && task.deadline >= today && task.deadline <= nextWeek
     )
   }
 

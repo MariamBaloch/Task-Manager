@@ -27,7 +27,7 @@ function Schedule() {
               position: 'absolute',
               width: '4px',
               height: '4px',
-              backgroundColor: '#2563eb',
+              backgroundColor: '#10b981',
               borderRadius: '50%',
               bottom: '-5px',
               left: '50%',

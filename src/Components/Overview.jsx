@@ -1,42 +1,42 @@
 import React, { useState, useEffect } from 'react'
 import { Chart } from 'primereact/chart'
+import { Card } from 'primereact/card'
 import { taskManager } from '../data'
 
 function Overview() {
   const [chartData, setChartData] = useState({})
   const [chartOptions, setChartOptions] = useState({})
+  const [taskCounts, setTaskCounts] = useState({
+    allTasks: 0,
+    incompleteTasks: 0,
+    overdueTasks: 0
+  })
 
   useEffect(() => {
-    const documentStyle = getComputedStyle(document.documentElement)
+    const { completed, incomplete } = taskManager.getTaskSummary()
+    const overdueTasks = taskManager.getOverdueTasks().length
+    const allTasks = Object.keys(taskManager.tasks).length
 
-    const tasks = Object.values(taskManager.tasks)
-
-    const completedTasks = tasks.filter((task) => task.completed).length
-    const incompleteTasks = tasks.filter(
-      (task) => !task.completed && task.deadline >= new Date()
-    ).length
-    const overdueTasks = tasks.filter(
-      (task) => !task.completed && task.deadline < new Date()
-    ).length
+    setTaskCounts({
+      allTasks,
+      incompleteTasks: incomplete,
+      overdueTasks
+    })
 
     const data = {
-      labels: [
-        `Completed (${completedTasks})`,
-        `Incomplete (${incompleteTasks})`,
-        `Overdue (${overdueTasks})`
-      ],
+      labels: [`Completed `, `Incomplete `, `Overdue `],
       datasets: [
         {
-          data: [completedTasks, incompleteTasks, overdueTasks],
+          data: [completed, incomplete, overdueTasks],
           backgroundColor: [
             'rgb(6, 214, 160)',
             'rgba(239, 203, 104)',
             'rgb(242, 97, 87)'
           ],
           hoverBackgroundColor: [
-            'rgb(6, 214, 160)',
-            'rgba(239, 203, 104)',
-            'rgb(242, 97, 87)'
+            'rgba(6, 214, 160, 0.8)',
+            'rgba(239, 203, 104, 0.8)',
+            'rgba(242, 97, 87, 0.8)'
           ]
         }
       ]
@@ -49,7 +49,6 @@ function Overview() {
           position: 'right',
           labels: {
             usePointStyle: true,
-            color: documentStyle.getPropertyValue('--text-color-secondary'),
             padding: 20
           }
         }
@@ -61,14 +60,61 @@ function Overview() {
     setChartOptions(options)
   }, [])
 
+  const renderCard = (title, count, icon, color) => (
+    <Card
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        minWidth: '280px',
+        maxHeight: '150px'
+      }}
+    >
+      <div className="flex ">
+        <i
+          className={icon}
+          style={{ fontSize: '3em', color, marginRight: '1rem' }}
+        ></i>
+        <div>
+          <div style={{ fontSize: '1.4em', color, marginBottom: '10px' }}>
+            {count}
+          </div>
+          <div style={{ fontSize: '1em', color: '#666' }}>{title}</div>
+        </div>
+      </div>
+    </Card>
+  )
+
   return (
-    <div className="flex align-items-center justify-content-center">
-      <Chart
-        type="pie"
-        data={chartData}
-        options={chartOptions}
-        className="w-20rem h-10rem"
-      />
+    <div className="flex flex-row justify-content-between ">
+      <div className="flex flex-row gap-4 align-items-center mr-8">
+        {renderCard(
+          'All Tasks',
+          taskCounts.allTasks,
+          'pi pi-briefcase',
+          'rgb(6, 214, 160)'
+        )}
+        {renderCard(
+          'Incomplete Tasks',
+          taskCounts.incompleteTasks,
+          'pi pi-exclamation-circle',
+          'rgba(239, 203, 104)'
+        )}
+        {renderCard(
+          'Overdue Tasks',
+          taskCounts.overdueTasks,
+          'pi pi-times-circle',
+          'rgb(242, 97, 87)'
+        )}
+      </div>
+
+      <div className="flex justify-content-center align-items-center w-full md:w-auto">
+        <Chart
+          type="pie"
+          data={chartData}
+          options={chartOptions}
+          className="w-full md:w-20rem md:h-11rem"
+        />
+      </div>
     </div>
   )
 }

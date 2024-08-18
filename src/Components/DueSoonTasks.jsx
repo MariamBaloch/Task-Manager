@@ -6,14 +6,7 @@ function DueSoonTasks() {
   const [dueSoonTasks, setDueSoonTasks] = useState([])
 
   useEffect(() => {
-    const today = new Date()
-    const nextWeek = new Date()
-    nextWeek.setDate(today.getDate() + 7)
-
-    const tasks = Object.values(taskManager.tasks).filter(
-      (task) => task.deadline >= today && task.deadline <= nextWeek
-    )
-
+    const tasks = taskManager.getDueSoonTasks()
     setDueSoonTasks(tasks)
   }, [])
 
@@ -72,7 +65,7 @@ function DueSoonTasks() {
         optionLabel="title"
         itemTemplate={itemTemplate}
         style={{ width: '100%' }}
-        listStyle={{ maxHeight: '200px', padding: '4px' }}
+        listStyle={{ maxHeight: '200px', padding: '4px', minHeight: '159px' }}
       />
     </div>
   )
