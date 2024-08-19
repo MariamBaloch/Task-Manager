@@ -1,13 +1,15 @@
 export class TaskManager {
-  constructor() {
+  constructor(priorityQueue) {
     this.tasks = {}
     this.dependencies = {}
+    this.priorityQueue = priorityQueue
   }
 
   addTask(task) {
     if (!this.tasks[task.id]) {
       this.tasks[task.id] = task
       this.dependencies[task.id] = []
+      this.priorityQueue.enqueue(task)
     }
   }
 
@@ -32,6 +34,7 @@ export class TaskManager {
     if (this.tasks[taskId]) {
       delete this.tasks[taskId]
       delete this.dependencies[taskId]
+      this.priorityQueue.dequeue(taskId)
     }
     Object.keys(this.dependencies).forEach((tid) => {
       this.removeDependency(tid, taskId)
@@ -41,19 +44,25 @@ export class TaskManager {
     })
   }
 
-  canCompleteTask(taskId) {
-    if (!this.dependencies[taskId]) return false
-    return this.dependencies[taskId].every(
-      (depId) => this.tasks[depId].completed
-    )
+  getAllTasks() {
+    return Object.values(this.tasks)
+  }
+
+  markDependenciesComplete(taskId) {
+    const dependencies = this.dependencies[taskId] || []
+    dependencies.forEach((depId) => {
+      if (!this.tasks[depId].completed) {
+        this.markDependenciesComplete(depId)
+        this.tasks[depId].markComplete()
+        this.priorityQueue.dequeue(depId)
+      }
+    })
   }
 
   markTaskComplete(taskId) {
-    if (this.canCompleteTask(taskId)) {
-      this.tasks[taskId].markComplete()
-    } else {
-      return `Task ${taskId} cannot be completed because its dependencies are not completed.`
-    }
+    this.markDependenciesComplete(taskId)
+    this.tasks[taskId].markComplete()
+    this.priorityQueue.dequeue(taskId)
   }
 
   updateTask(updatedTask) {
@@ -74,6 +83,7 @@ export class TaskManager {
       (task) => new Date(task.deadline) < now && !task.completed
     )
   }
+
   getDueSoonTasks() {
     const today = new Date()
     const nextWeek = new Date()

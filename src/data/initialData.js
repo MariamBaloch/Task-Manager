@@ -2,8 +2,8 @@ import { Task } from './task'
 import { TaskManager } from './taskManager'
 import { PriorityQueue } from './priorityQueue'
 
-const taskManager = new TaskManager()
 const priorityQueue = new PriorityQueue()
+const taskManager = new TaskManager(priorityQueue)
 
 const tasks = [
   new Task(
@@ -130,7 +130,6 @@ const tasks = [
 
 tasks.forEach((task) => {
   taskManager.addTask(task)
-  priorityQueue.enqueue(task)
 })
 
 taskManager.addDependency(3, 1)
@@ -145,5 +144,6 @@ taskManager.markTaskComplete(1)
 taskManager.markTaskComplete(2)
 taskManager.markTaskComplete(5)
 taskManager.markTaskComplete(7)
+
 
 export { taskManager, priorityQueue }
