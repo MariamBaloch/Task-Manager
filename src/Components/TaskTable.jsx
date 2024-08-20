@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Dropdown } from 'primereact/dropdown'
@@ -6,12 +6,17 @@ import { Tag } from 'primereact/tag'
 import { Button } from 'primereact/button'
 import { Calendar } from 'primereact/calendar'
 import { Dialog } from 'primereact/dialog'
-import { OrganizationChart } from 'primereact/organizationchart'
 import { classNames } from 'primereact/utils'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import DependencyChart from './DependencyChart'
+import { taskManager } from '../data'
 
-function TaskTable({ tasks, onEdit, onDelete, onComplete, taskManager }) {
+function TaskTable() {
+  const [tasks, setTasks] = useState()
+  useEffect(() => {
+    setTasks(taskManager.getAllTasks())
+  }, [])
+
   const [statuses] = useState([
     { label: 'Completed', value: true },
     { label: 'Incomplete', value: false }
@@ -111,7 +116,7 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete, taskManager }) {
           icon="pi pi-check"
           type="button"
           className="p-button-sm p-button-text"
-          onClick={() => onComplete(rowData.id)}
+          onClick={() => handleCompleteTask(rowData.id)}
         />
         <Button
           type="button"
@@ -123,7 +128,7 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete, taskManager }) {
           icon="pi pi-trash"
           type="button"
           className="p-button-sm p-button-text text-red-600"
-          onClick={() => onDelete(rowData.id)}
+          onClick={() => handleDeleteTask(rowData.id)}
         />
       </div>
     )
@@ -183,6 +188,7 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete, taskManager }) {
       children
     }
   }
+
   const renderDependencyModal = () => {
     if (!selectedTask) return null
 
@@ -198,6 +204,15 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete, taskManager }) {
         <DependencyChart data={hierarchyData} />
       </Dialog>
     )
+  }
+
+  const handleCompleteTask = (taskId) => {
+    taskManager.markTaskComplete(taskId)
+    setFilters({ ...filters })
+  }
+  const handleDeleteTask = (taskId) => {
+    taskManager.removeTask(taskId)
+    setTasks(taskManager.getAllTasks())
   }
 
   return (

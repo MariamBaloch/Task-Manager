@@ -20,8 +20,6 @@ export class Task {
     this.title = newTitle
   }
 
-
-
   updateDeadline(newDeadline) {
     this.deadline = newDeadline
   }

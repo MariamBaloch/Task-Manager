@@ -33,15 +33,14 @@ export class TaskManager {
   removeTask(taskId) {
     if (this.tasks[taskId]) {
       delete this.tasks[taskId]
-      delete this.dependencies[taskId]
       this.priorityQueue.dequeue(taskId)
+      delete this.dependencies[taskId]
+      Object.keys(this.dependencies).forEach((tid) => {
+        this.dependencies[tid] = this.dependencies[tid].filter(
+          (depId) => depId !== taskId
+        )
+      })
     }
-    Object.keys(this.dependencies).forEach((tid) => {
-      this.removeDependency(tid, taskId)
-      if (this.dependencies[tid].length === 0) {
-        this.removeTask(tid)
-      }
-    })
   }
 
   getAllTasks() {

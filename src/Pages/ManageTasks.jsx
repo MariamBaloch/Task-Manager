@@ -1,6 +1,7 @@
 import TaskTable from '../Components/TaskTable'
 import React, { useEffect, useState } from 'react'
 import { taskManager } from '../data'
+
 function ManageTasks() {
   const [tasks, setTasks] = useState()
 
@@ -10,10 +11,7 @@ function ManageTasks() {
   return (
     <div>
       <div className="mx-2">
-        <TaskTable
-          tasks={tasks}
-          taskManager={taskManager}
-        />
+        <TaskTable />
       </div>
     </div>
   )
