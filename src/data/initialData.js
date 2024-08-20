@@ -36,7 +36,6 @@ taskManager.addDependency(10, 7)
 taskManager.addDependency(10, 8)
 taskManager.addDependency(15, 13)
 taskManager.addDependency(15, 14)
-
 taskManager.markTaskComplete(1)
 taskManager.markTaskComplete(2)
 taskManager.markTaskComplete(5)

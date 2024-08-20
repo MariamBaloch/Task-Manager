@@ -9,6 +9,7 @@ import { taskManager } from './data'
 import NavigationBar from './Components/NavigationBar'
 import ManageTasks from './Pages/ManageTasks'
 import DueSoonTasks from './Components/DueSoonTasks'
+import AddTaskForm from './Components/AddTaskForm'
 import 'primereact/resources/themes/lara-light-green/theme.css'
 import 'primereact/resources/primereact.min.css'
 import 'primeflex/primeflex.css'
@@ -17,6 +18,7 @@ import './App.css'
 
 function App() {
   const [visible, setVisible] = useState(false)
+  const [addTaskVisible, setAddTaskVisible] = useState(false)
   const [dueTasksCount, setDueTasksCount] = useState(0)
   const location = useLocation()
 
@@ -38,6 +40,17 @@ function App() {
 
   const rightContent = (
     <div style={{ position: 'relative' }}>
+      <Button
+        className="p-button-rounded p-button-text"
+        style={{ fontSize: '1.9rem', color: '#10b981' }}
+        onClick={() => setAddTaskVisible(true)}
+        aria-label="Add Task"
+      >
+        <i
+          className="pi pi-plus-circle"
+          style={{ fontSize: '1.9rem' }}
+        ></i>
+      </Button>
       <Button
         className="p-button-rounded p-button-text"
         style={{ fontSize: '1.9rem', color: '#10b981' }}
@@ -63,7 +76,9 @@ function App() {
         <NavigationBar />
         <main className="flex-grow-1">
           <Toolbar
-            center={<h2 style={{ color: '#10b981' }}>{getTitle()}</h2>}
+            center={
+              <h2 style={{ color: '#10b981', margin: '0px' }}>{getTitle()}</h2>
+            }
             right={rightContent}
           />
           <Routes>
@@ -91,6 +106,20 @@ function App() {
         onHide={() => setVisible(false)}
       >
         <DueSoonTasks />
+      </Dialog>
+
+      <Dialog
+        header="Add New Task"
+        visible={addTaskVisible}
+        style={{
+          width: '400px',
+          top: '80px',
+          right: '40px',
+          position: 'absolute'
+        }}
+        onHide={() => setAddTaskVisible(false)}
+      >
+        <AddTaskForm onClose={() => setAddTaskVisible(false)} />
       </Dialog>
     </div>
   )

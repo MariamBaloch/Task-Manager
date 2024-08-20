@@ -219,10 +219,9 @@ function TaskTable() {
     tasks && (
       <div className="card p-fluid">
         <DataTable
-          size="small"
           value={tasks}
           paginator
-          rows={12}
+          rows={9}
           filters={filters}
           filterDisplay="row"
           onFilter={(e) => setFilters(e.filters)}
