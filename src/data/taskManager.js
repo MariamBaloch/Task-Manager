@@ -47,6 +47,16 @@ export class TaskManager {
   getAllTasks() {
     return Object.values(this.tasks)
   }
+  getTaskById(taskId) {
+    return this.tasks[taskId] || null
+  }
+  getDependenciesForTask(taskId) {
+    const task = this.getTaskById(taskId)
+    if (!task) return []
+
+    const dependencies = this.dependencies[taskId] || []
+    return dependencies.map((depId) => this.getTaskById(depId))
+  }
 
   markDependenciesComplete(taskId) {
     const dependencies = this.dependencies[taskId] || []

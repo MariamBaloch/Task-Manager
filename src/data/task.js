@@ -1,8 +1,8 @@
 export class Task {
-  constructor(id, title, description, priority, deadline, completed = false) {
+  constructor(id, title, priority, deadline, completed = false) {
     this.id = id
     this.title = title
-    this.description = description
+ 
     this.priority = priority
     this.deadline = deadline
     this.completed = completed
@@ -20,9 +20,7 @@ export class Task {
     this.title = newTitle
   }
 
-  updateDescription(newDesc) {
-    this.description = newDesc
-  }
+
 
   updateDeadline(newDeadline) {
     this.deadline = newDeadline

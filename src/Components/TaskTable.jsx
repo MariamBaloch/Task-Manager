@@ -5,10 +5,13 @@ import { Dropdown } from 'primereact/dropdown'
 import { Tag } from 'primereact/tag'
 import { Button } from 'primereact/button'
 import { Calendar } from 'primereact/calendar'
+import { Dialog } from 'primereact/dialog'
+import { OrganizationChart } from 'primereact/organizationchart'
 import { classNames } from 'primereact/utils'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
+import DependencyChart from './DependencyChart'
 
-function TaskTable({ tasks, onEdit, onDelete, onComplete }) {
+function TaskTable({ tasks, onEdit, onDelete, onComplete, taskManager }) {
   const [statuses] = useState([
     { label: 'Completed', value: true },
     { label: 'Incomplete', value: false }
@@ -35,6 +38,9 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete }) {
     priority: { value: null, matchMode: FilterMatchMode.EQUALS }
   })
 
+  const [showDependencyModal, setShowDependencyModal] = useState(false)
+  const [selectedTask, setSelectedTask] = useState(null)
+
   const getPrioritySeverity = (priority) => {
     switch (priority) {
       case 1:
@@ -57,7 +63,7 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete }) {
       'border-circle w-1rem h-1rem inline-flex mx-5',
       {
         'bg-green-500': rowData.completed,
-        'bg-gray-400': !rowData.completed
+        'bg-yellow-400': !rowData.completed
       }
     )
 
@@ -99,6 +105,7 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete }) {
           type="button"
           icon="pi pi-sitemap"
           className="p-button-sm p-button-text text-yellow-600"
+          onClick={() => showDependencies(rowData)}
         />
         <Button
           icon="pi pi-check"
@@ -152,6 +159,44 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete }) {
         onChange={(e) => options.filterApplyCallback(e.value, options.index)}
         showClear
       />
+    )
+  }
+
+  const showDependencies = (task) => {
+    setSelectedTask(task)
+    setShowDependencyModal(true)
+  }
+
+  const generateHierarchyData = (taskId) => {
+    const task = taskManager.getTaskById(taskId)
+    if (!task) return null
+
+    const children = taskManager
+      .getDependenciesForTask(taskId)
+      .map((dep) => generateHierarchyData(dep.id))
+
+    return {
+      id: task.id,
+      label: task.title,
+      deadline: task.deadline,
+      completed: task.completed,
+      children
+    }
+  }
+  const renderDependencyModal = () => {
+    if (!selectedTask) return null
+
+    const hierarchyData = [generateHierarchyData(selectedTask.id)]
+
+    return (
+      <Dialog
+        visible={showDependencyModal}
+        onHide={() => setShowDependencyModal(false)}
+        header="Task Dependencies"
+        style={{ width: '50vw', textAlign: 'center' }}
+      >
+        <DependencyChart data={hierarchyData} />
+      </Dialog>
     )
   }
 
@@ -210,6 +255,7 @@ function TaskTable({ tasks, onEdit, onDelete, onComplete }) {
             bodyStyle={{ textAlign: 'center' }}
           ></Column>
         </DataTable>
+        {renderDependencyModal()}
       </div>
     )
   )
