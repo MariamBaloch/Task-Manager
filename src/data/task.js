@@ -6,20 +6,7 @@ export class Task {
     this.deadline = deadline
     this.completed = completed
   }
-
-  updatePriority(newPriority) {
-    this.priority = newPriority
-  }
-
   markComplete() {
     this.completed = true
-  }
-
-  updateTitle(newTitle) {
-    this.title = newTitle
-  }
-
-  updateDeadline(newDeadline) {
-    this.deadline = newDeadline
   }
 }

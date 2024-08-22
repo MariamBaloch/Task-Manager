@@ -87,21 +87,4 @@ export class PriorityQueue {
   isEmpty() {
     return this.tasks.length === 0
   }
-
-  findById(id) {
-    return this.tasks[this.positions[id]]
-  }
-
-  getAllTasks() {
-    return this.tasks
-  }
-
-  clear() {
-    this.tasks = []
-    this.positions = {}
-  }
-
-  count() {
-    return this.tasks.length
-  }
 }

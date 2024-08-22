@@ -66,14 +66,28 @@ function Overview() {
         display: 'flex',
         alignItems: 'center',
         minWidth: '280px',
-        maxHeight: '150px'
+        maxHeight: '150px',
+        borderRadius: '40px'
       }}
     >
-      <div className="flex ">
-        <i
-          className={icon}
-          style={{ fontSize: '3em', color, marginRight: '1rem' }}
-        ></i>
+      <div className="flex">
+        <div
+          style={{
+            backgroundColor: color,
+            borderRadius: '50%',
+            width: '3.5em',
+            height: '3.5em',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: '1rem'
+          }}
+        >
+          <i
+            className={icon}
+            style={{ fontSize: '2em', color: '#fff' }}
+          ></i>
+        </div>
         <div>
           <div style={{ fontSize: '1.4em', color, marginBottom: '10px' }}>
             {count}
@@ -85,7 +99,7 @@ function Overview() {
   )
 
   return (
-    <div className="flex flex-row justify-content-between  ">
+    <div className="flex flex-row justify-content-between ">
       <div className="flex flex-row gap-4 align-items-center mr-8">
         {renderCard(
           'All Tasks',
