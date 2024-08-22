@@ -77,6 +77,8 @@ export class TaskManager {
   updateTask(updatedTask) {
     if (this.tasks[updatedTask.id]) {
       this.tasks[updatedTask.id] = updatedTask
+      this.priorityQueue.dequeue(updatedTask.id)
+      this.priorityQueue.enqueue(updatedTask)
     }
   }
 

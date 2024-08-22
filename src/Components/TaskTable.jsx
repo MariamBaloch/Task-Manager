@@ -10,9 +10,17 @@ import { classNames } from 'primereact/utils'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import DependencyChart from './DependencyChart'
 import { taskManager } from '../data'
+import EditDialog from './EditDialog'
 
 function TaskTable() {
   const [tasks, setTasks] = useState()
+  const [isEditDialogVisible, setEditDialogVisible] = useState(false)
+  const [editTask, setEditTask] = useState(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editDeadline, setEditDeadline] = useState(null)
+  const [editPriority, setEditPriority] = useState(null)
+  const [editCompleted, setEditCompleted] = useState(false)
+
   useEffect(() => {
     setTasks(taskManager.getAllTasks())
   }, [])
@@ -105,19 +113,22 @@ function TaskTable() {
 
   const actionsBodyTemplate = (rowData) => {
     return (
-      <div className="flex justify-content-center gap-2">
+      <div className="flex justify-content-end gap-2">
+        {!rowData.completed && (
+          <Button
+            icon="pi pi-check"
+            type="button"
+            className="p-button-sm p-button-text"
+            onClick={() => handleCompleteTask(rowData.id)}
+          />
+        )}
         <Button
           type="button"
           icon="pi pi-sitemap"
           className="p-button-sm p-button-text text-yellow-600"
           onClick={() => showDependencies(rowData)}
         />
-        <Button
-          icon="pi pi-check"
-          type="button"
-          className="p-button-sm p-button-text"
-          onClick={() => handleCompleteTask(rowData.id)}
-        />
+
         <Button
           type="button"
           icon="pi pi-pencil"
@@ -139,6 +150,7 @@ function TaskTable() {
       <Dropdown
         value={options.value}
         options={statuses}
+        placeholder="Select"
         onChange={(e) => options.filterApplyCallback(e.value, options.index)}
         showClear
       />
@@ -151,6 +163,7 @@ function TaskTable() {
         value={options.value}
         onChange={(e) => options.filterApplyCallback(e.value, options.index)}
         dateFormat="yy-mm-dd"
+        placeholder="Select"
         showButtonBar
       />
     )
@@ -161,6 +174,7 @@ function TaskTable() {
       <Dropdown
         value={options.value}
         options={priorities}
+        placeholder="Select"
         onChange={(e) => options.filterApplyCallback(e.value, options.index)}
         showClear
       />
@@ -214,7 +228,27 @@ function TaskTable() {
     taskManager.removeTask(taskId)
     setTasks(taskManager.getAllTasks())
   }
+  const onEdit = (task) => {
+    setEditTask(task)
+    setEditTitle(task.title)
+    setEditDeadline(new Date(task.deadline))
+    setEditPriority(task.priority)
+    setEditCompleted(task.completed)
+    setEditDialogVisible(true)
+  }
+  const handleSaveTask = () => {
+    const updatedTask = {
+      ...editTask,
+      title: editTitle,
+      deadline: editDeadline,
+      priority: editPriority,
+      completed: editCompleted
+    }
 
+    taskManager.updateTask(updatedTask)
+    setTasks(taskManager.getAllTasks())
+    setEditDialogVisible(false)
+  }
   return (
     tasks && (
       <div className="card p-fluid">
@@ -237,6 +271,7 @@ function TaskTable() {
             field="title"
             header="Title"
             filter
+            filterPlaceholder="Search"
             style={{ width: '20%' }}
           ></Column>
           <Column
@@ -270,6 +305,21 @@ function TaskTable() {
           ></Column>
         </DataTable>
         {renderDependencyModal()}
+        <EditDialog
+          visible={isEditDialogVisible}
+          onHide={() => setEditDialogVisible(false)}
+          title={editTitle}
+          setTitle={setEditTitle}
+          deadline={editDeadline}
+          setDeadline={setEditDeadline}
+          priority={editPriority}
+          setPriority={setEditPriority}
+          priorities={priorities}
+          completed={editCompleted}
+          setCompleted={setEditCompleted}
+          statuses={statuses}
+          onSave={handleSaveTask}
+        />
       </div>
     )
   )
