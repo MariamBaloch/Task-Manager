@@ -6,7 +6,7 @@ import { PrimeReactProvider } from 'primereact/api'
 
 createRoot(document.getElementById('root')).render(
   <PrimeReactProvider>
-    <BrowserRouter>
+    <BrowserRouter basename="/Task-Manager/">
       <App />
     </BrowserRouter>
   </PrimeReactProvider>

@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 function NavigationBar() {
   const navigate = useNavigate()
   const location = useLocation()
-  const isDashboardActive = location.pathname === '/Task-Manager/'
+  const isDashboardActive = location.pathname === '/'
   const isTaskManagerActive = location.pathname === '/taskmanager'
   return (
     <div className="flex">
@@ -91,7 +91,7 @@ function NavigationBar() {
                           ? 'text-green-300'
                           : 'text-700 hover:bg-primary-500 text-white'
                       }`}
-                      onClick={() => navigate('/Task-Manager/')}
+                      onClick={() => navigate('/')}
                     >
                       <i className="pi pi-home mr-2 text-white"></i>
                       <span className="font-medium ">Dashboard</span>

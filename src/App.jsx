@@ -29,9 +29,9 @@ function App() {
 
   const getTitle = () => {
     switch (location.pathname) {
-      case '/Task-Manager':
+      case '/Task-Manager/':
         return 'Dashboard'
-      case '/taskmanager':
+      case '/Task-Manager/taskmanager':
         return 'Task Manager'
       default:
         return 'Task Manager'
@@ -83,7 +83,7 @@ function App() {
           />
           <Routes>
             <Route
-              path="/Task-Manager"
+              path="/"
               element={<Dashboard />}
             />
             <Route
