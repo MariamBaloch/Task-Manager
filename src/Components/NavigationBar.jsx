@@ -1,6 +1,5 @@
 import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Toolbar } from 'primereact/toolbar'
 
 function NavigationBar() {
   const navigate = useNavigate()
